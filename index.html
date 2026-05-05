@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MaraX Cinema Pro Plus | Ultimate Movie Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #05070a;
+            font-family: 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* animated background orbs */
+        .orb-bg {
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(255, 70, 117, 0.25), transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: floatOrb 12s infinite alternate;
+        }
+        .orb-bg2 {
+            bottom: -20%;
+            right: -10%;
+            top: auto;
+            left: auto;
+            background: radial-gradient(circle, rgba(100, 80, 255, 0.2), transparent);
+            animation: floatOrb2 15s infinite alternate;
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0,0) scale(1); opacity: 0.5; }
+            100% { transform: translate(5%,5%) scale(1.2); opacity: 0.8; }
+        }
+        @keyframes floatOrb2 {
+            0% { transform: translate(0,0) scale(1); }
+            100% { transform: translate(-5%,-5%) scale(1.3); }
+        }
+
+        /* glass navbar */
+        .glass-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5,7,12,0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo-glow {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #ff4675, #ffb347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px rgba(255,70,117,0.3);
+        }
+        .search-glass {
+            display: flex;
+            background: rgba(30,32,45,0.6);
+            border-radius: 2.5rem;
+            padding: 0.2rem 0.2rem 0.2rem 1rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .search-glass input {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 0.8rem;
+            color: white;
+            font-size: 0.9rem;
+            width: 200px;
+            outline: none;
+        }
+        .search-glass button {
+            background: #ff4675;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* hero with video background */
+        .hero-video {
+            position: relative;
+            height: 70vh;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .hero-video video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, #05070a 0%, rgba(0,0,0,0.5) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem;
+        }
+        .hero-text {
+            max-width: 600px;
+            animation: fadeUp 1s ease;
+        }
+        .hero-text .badge {
+            background: #ff4675;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* cinematic tabs - scrollable */
+        .tabs-cine {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            white-space: nowrap;
+        }
+        .tab-cine {
+            background: rgba(20,22,35,0.6);
+            backdrop-filter: blur(8px);
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .tab-cine.active {
+            background: linear-gradient(135deg, #ff4675, #ffb347);
+            color: white;
+            box-shadow: 0 0 15px #ff4675;
+        }
+
+        /* movie grid ultra */
+        .movies-wrap {
+            padding: 0 2rem 2rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 1.5rem 0 1rem;
+        }
+        .movie-grid-ultra {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .movie-card-ultra {
+            background: rgba(18,20,30,0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .movie-card-ultra:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.8);
+            border-color: #ff4675;
+        }
+        .poster-ultra {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+        }
+        .info-ultra {
+            padding: 0.8rem;
+        }
+        .title-ultra {
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .meta-ultra {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            margin: 0.4rem 0;
+            color: #aaa;
+        }
+        .rating-badge {
+            background: #ff4675;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.3rem;
+        }
+        .btn-group-ultra {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+        /* ELITE BUTTON STYLES */
+        .btn-cine {
+            background: rgba(25,28,40,0.8);
+            border: none;
+            padding: 0.3rem 0.7rem;
+            border-radius: 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            letter-spacing: 0.3px;
+        }
+        .btn-cine.download {
+            background: linear-gradient(145deg, #2e7d32, #1b5e20);
+            border-bottom: 2px solid #4caf50;
+        }
+        .btn-cine.magnet {
+            background: linear-gradient(145deg, #ff8c00, #e67e00);
+            border-bottom: 2px solid #ffb347;
+        }
+        .btn-cine.watchlater {
+            background: linear-gradient(145deg, #1e88e5, #1565c0);
+            border-bottom: 2px solid #42a5f5;
+        }
+        .btn-cine.trailer {
+            background: linear-gradient(145deg, #9c27b0, #6a1b9a);
+            border-bottom: 2px solid #ce93d8;
+        }
+        .btn-cine:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .btn-cine:active {
+            transform: translateY(1px);
+        }
+
+        /* sidebar downloads */
+        .sidebar-downloads {
+            position: fixed;
+            right: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: rgba(8,10,18,0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid #ff4675;
+            z-index: 200;
+            transition: right 0.3s ease;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .sidebar-downloads.open {
+            right: 0;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            right: 1rem;
+            bottom: 2rem;
+            background: linear-gradient(135deg, #ff4675, #ffb347);
+            border-radius: 3rem;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            z-index: 201;
+            font-weight: bold;
+            box-shadow: 0 0 20px #ff4675;
+            transition: 0.2s;
+        }
+        .sidebar-toggle:hover {
+            transform: scale(1.05);
+        }
+        .download-item {
+            background: #1a1c28;
+            border-radius: 1rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* skeleton loader */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .skeleton-card {
+            background: #1a1c28;
+            border-radius: 1rem;
+            aspect-ratio: 2/3;
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+        .modal-premium {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-card {
+            background: #0f111a;
+            border-radius: 1.5rem;
+            width: 85%;
+            max-width: 900px;
+            padding: 0.5rem;
+            border: 1px solid #ff4675;
+        }
+        .modal-card iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 1rem;
+        }
+        .close-modal {
+            float: right;
+            background: #ff4675;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.3rem 1rem;
+            color: white;
+            margin: 0.5rem;
+            cursor: pointer;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.7rem;
+            color: #555;
+        }
+        @media (max-width: 700px) {
+            .glass-nav { padding: 0.8rem 1rem; }
+            .hero-text h1 { font-size: 2rem; }
+            .movie-grid-ultra { gap: 0.8rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .sidebar-downloads { width: 280px; }
+        }
+        [data-tooltip] {
+            position: relative;
+        }
+        [data-tooltip]:before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            display: none;
+            z-index: 10;
+        }
+        [data-tooltip]:hover:before {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="orb-bg"></div>
+<div class="orb-bg orb-bg2"></div>
+
+<div class="glass-nav">
+    <div class="logo-glow">🎬 MaraX Cinema Pro++</div>
+    <div class="search-glass">
+        <input type="text" id="searchInput" placeholder="Search epic...">
+        <button id="searchBtn">🔍</button>
+    </div>
+</div>
+
+<div class="hero-video">
+    <video autoplay muted loop playsinline poster="https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-woods-1070-large.mp4">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-woods-1070-large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay">
+        <div class="hero-text">
+            <div class="badge">🔥 ELITE CINEMA HUB</div>
+            <h1>Infinite Stories<br>Zero Limits</h1>
+        </div>
+    </div>
+</div>
+
+<div class="tabs-cine" id="tabContainer">
+    <button class="tab-cine active" data-tab="trending">🔥 TRENDING</button>
+    <button class="tab-cine" data-tab="toprated">⭐ TOP RATED</button>
+    <button class="tab-cine" data-tab="latest">🆕 LATEST</button>
+    <button class="tab-cine" data-tab="cartoons">🐱 CARTOONS</button>
+    <button class="tab-cine" data-tab="pixar">✨ PIXAR</button>
+    <button class="tab-cine" data-tab="disney">🏰 DISNEY</button>
+</div>
+
+<div class="movies-wrap">
+    <div class="section-header">
+        <h2 id="rowTitle">Trending Now</h2>
+        <span id="resultCount" style="color:#aaa;"></span>
+    </div>
+    <div id="movieGrid" class="movie-grid-ultra"></div>
+</div>
+
+<footer>⚡ No API keys • YTS + Fallback • Elite buttons • Download .txt • Magnet copy • Watchlist • Trailer</footer>
+
+<div class="sidebar-toggle" id="sidebarToggleBtn">📥 MY DOWNLOADS</div>
+<div id="downloadsSidebar" class="sidebar-downloads">
+    <h3 style="margin-bottom:1rem;">📦 Downloaded Movies</h3>
+    <div id="downloadsListSidebar"></div>
+</div>
+
+<div id="trailerModal" class="modal-premium">
+    <div class="modal-card">
+        <button class="close-modal" id="closeModalBtn">✖ CLOSE</button>
+        <iframe id="trailerIframe" src="" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    // ---------- YTS API (free, no key) + FALLBACK for extra tabs ----------
+    const YTS_API = "https://yts.mx/api/v2/list_movies.json";
+
+    // Custom fallback for Cartoons, Pixar, Disney (rich static data)
+    const FALLBACK_TABS = {
+        cartoons: [
+            { id: 101, title: "The Lion King", year: 1994, rating: 8.5, genres: ["Animation","Musical"], summary: "A young lion prince flees his kingdom.", large_cover_image: "https://image.tmdb.org/t/p/w500/sKCr78MXG5oitnfdtZNR4sY8B0D.jpg", torrents: [{ url: "magnet:?xt=urn:btih:lionking" }] },
+            { id: 102, title: "Spider-Man: Into the Spider-Verse", year: 2018, rating: 8.4, genres: ["Animation","Action"], summary: "Teen Miles Morales becomes Spider-Man.", large_cover_image: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg", torrents: [{ url: "magnet:?xt=urn:btih:spiderverse" }] },
+            { id: 103, title: "Tom and Jerry", year: 2021, rating: 6.5, genres: ["Animation","Comedy"], summary: "Classic rivalry in a hotel.", large_cover_image: "https://image.tmdb.org/t/p/w500/6KErL3UnycPk6BVqKbwZ3C7r3Kj.jpg", torrents: [{ url: "magnet:?xt=urn:btih:tomjerry" }] }
+        ],
+        pixar: [
+            { id: 201, title: "Toy Story", year: 1995, rating: 8.3, genres: ["Animation","Family"], summary: "Cowboy doll and space ranger adventure.", large_cover_image: "https://image.tmdb.org/t/p/w500/uXDfjJbdP4ijU5ftQSrAkpKz4pM.jpg", torrents: [{ url: "magnet:?xt=urn:btih:toystory" }] },
+            { id: 202, title: "Up", year: 2009, rating: 8.2, genres: ["Animation","Adventure"], summary: "Old man flies his house with balloons.", large_cover_image: "https://image.tmdb.org/t/p/w500/qk1JqfpRVAf68K1iDo98FCAkijW.jpg", torrents: [{ url: "magnet:?xt=urn:btih:up" }] },
+            { id: 203, title: "Coco", year: 2017, rating: 8.4, genres: ["Animation","Music"], summary: "Boy enters Land of the Dead.", large_cover_image: "https://image.tmdb.org/t/p/w500/gGEsB4ijppOmhRpV9pY0l9QwDoT.jpg", torrents: [{ url: "magnet:?xt=urn:btih:coco" }] }
+        ],
+        disney: [
+            { id: 301, title: "Frozen", year: 2013, rating: 7.5, genres: ["Animation","Musical"], summary: "Sisters with ice magic.", large_cover_image: "https://image.tmdb.org/t/p/w500/k6EOrvWF5CFFJtvM8xdZrKxTKF7.jpg", torrents: [{ url: "magnet:?xt=urn:btih:frozen" }] },
+            { id: 302, title: "Aladdin", year: 1992, rating: 8.0, genres: ["Animation","Fantasy"], summary: "Street rat meets genie.", large_cover_image: "https://image.tmdb.org/t/p/w500/3iYQTLGbi4F2MZQYUXz1Z04ztNl.jpg", torrents: [{ url: "magnet:?xt=urn:btih:aladdin" }] },
+            { id: 303, title: "Moana", year: 2016, rating: 7.6, genres: ["Animation","Adventure"], summary: "Demi-god and voyager sail.", large_cover_image: "https://image.tmdb.org/t/p/w500/mOReSM4qRJh7Y8Rglc6VqGtCj3l.jpg", torrents: [{ url: "magnet:?xt=urn:btih:moana" }] }
+        ]
+    };
+
+    let currentTab = "trending";
+    let currentMovies = [];
+    let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    let downloadedIds = JSON.parse(localStorage.getItem("downloadedIds")) || [];
+
+    function saveWatchlist() { localStorage.setItem("watchlist", JSON.stringify(watchlist)); }
+    function saveDownloadedIds() { localStorage.setItem("downloadedIds", JSON.stringify(downloadedIds)); }
+
+    function renderSidebarDownloads() {
+        const container = document.getElementById("downloadsListSidebar");
+        const downloadedMovies = downloadedIds.map(id => currentMovies.find(m => m.id === id)).filter(m => m);
+        if (!downloadedMovies.length) {
+            container.innerHTML = '<div style="color:#aaa; text-align:center;">No downloads yet.<br>Click 💾 on any movie.</div>';
+            return;
+        }
+        container.innerHTML = downloadedMovies.map(m => `
+            <div class="download-item">
+                <span><strong>${m.title}</strong> (${m.year})</span>
+                <button class="btn-cine download" style="background:#2e7d32; padding:0.2rem 0.5rem; font-size:0.65rem;" data-redload="${m.id}">📥 Re-download</button>
+            </div>
+        `).join("");
+        document.querySelectorAll("[data-redload]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = parseInt(btn.dataset.redload);
+                const movie = currentMovies.find(m => m.id === id);
+                if (movie) downloadMovieInfo(movie);
+            });
+        });
+    }
+
+    function downloadMovieInfo(movie) {
+        const magnet = movie.torrents?.[0]?.url || "No magnet available";
+        const content = `🎬 ${movie.title} (${movie.year})\n⭐ Rating: ${movie.rating}\n📂 Genres: ${movie.genres?.join(", ") || "N/A"}\n📝 Summary: ${movie.summary || "No summary"}\n🧲 Magnet: ${magnet}\n\nDownloaded from MaraX Cinema Pro++`;
+        const blob = new Blob([content], { type: "text/plain" });
+        const a = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = `${movie.title}_${movie.year}_info.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if (!downloadedIds.includes(movie.id)) {
+            downloadedIds.push(movie.id);
+            saveDownloadedIds();
+            renderSidebarDownloads();
+        }
+    }
+
+    function copyMagnet(movie) {
+        const magnet = movie.torrents?.[0]?.url;
+        if (!magnet) return alert("No magnet link");
+        navigator.clipboard.writeText(magnet);
+        alert("Magnet copied to clipboard!");
+    }
+
+    function toggleWatchLater(movie) {
+        const exists = watchlist.some(m => m.id === movie.id);
+        if (exists) {
+            watchlist = watchlist.filter(m => m.id !== movie.id);
+            alert(`❌ Removed ${movie.title} from Watch Later`);
+        } else {
+            watchlist.push(movie);
+            alert(`✅ Added ${movie.title} to Watch Later`);
+        }
+        saveWatchlist();
+    }
+
+    function showTrailer(movie) {
+        const modal = document.getElementById("trailerModal");
+        const iframe = document.getElementById("trailerIframe");
+        const query = encodeURIComponent(`${movie.title} ${movie.year} official trailer`);
+        iframe.src = `https://www.youtube.com/embed?listType=search&q=${query}`;
+        modal.style.display = "flex";
+    }
+
+    function renderMovies(movies) {
+        const grid = document.getElementById("movieGrid");
+        if (!movies.length) {
+            grid.innerHTML = '<div class="error" style="text-align:center;">🎞️ No movies found. Try another tab.</div>';
+            document.getElementById("resultCount").innerText = "";
+            return;
+        }
+        document.getElementById("resultCount").innerText = `${movies.length} titles`;
+        grid.innerHTML = movies.map(movie => `
+            <div class="movie-card-ultra">
+                <img class="poster-ultra" src="${movie.large_cover_image || 'https://via.placeholder.com/200x300?text=No+Poster'}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                <div class="info-ultra">
+                    <div class="title-ultra">${movie.title}</div>
+                    <div class="meta-ultra"><span>${movie.year}</span><span class="rating-badge">⭐ ${movie.rating}</span></div>
+                    <div class="btn-group-ultra">
+                        <button class="btn-cine download" data-id="${movie.id}" data-action="download" data-tooltip="Save .txt">💾 Info</button>
+                        <button class="btn-cine magnet" data-id="${movie.id}" data-action="magnet" data-tooltip="Copy magnet">🧲 Magnet</button>
+                        <button class="btn-cine watchlater" data-id="${movie.id}" data-action="watchlater" data-tooltip="Watch later">❤️ Later</button>
+                        <button class="btn-cine trailer" data-id="${movie.id}" data-action="trailer" data-tooltip="Watch trailer">▶️ Trailer</button>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+        // attach events
+        document.querySelectorAll(".btn-cine").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                const movie = movies.find(m => m.id === id);
+                if (!movie) return;
+                const act = btn.dataset.action;
+                if (act === "download") downloadMovieInfo(movie);
+                else if (act === "magnet") copyMagnet(movie);
+                else if (act === "watchlater") toggleWatchLater(movie);
+                else if (act === "trailer") showTrailer(movie);
+            });
+        });
+    }
+
+    // Filter movies from YTS data for special tabs (cartoons/pixar/disney) by keywords
+    function filterByKeywords(movies, keywords) {
+        return movies.filter(m => keywords.some(kw => m.title.toLowerCase().includes(kw) || (m.genres && m.genres.some(g => g.toLowerCase().includes(kw)))));
+    }
+
+    async function fetchMovies(category) {
+        const grid = document.getElementById("movieGrid");
+        grid.innerHTML = `<div class="skeleton-grid">${'<div class="skeleton-card"></div>'.repeat(6)}</div>`;
+        
+        // Handle special tabs that use fallback or filtering
+        if (category === "cartoons") {
+            currentMovies = FALLBACK_TABS.cartoons;
+            renderMovies(currentMovies);
+            renderSidebarDownloads();
+            return;
+        }
+        if (category === "pixar") {
+            currentMovies = FALLBACK_TABS.pixar;
+            renderMovies(currentMovies);
+            renderSidebarDownloads();
+            return;
+        }
+        if (category === "disney") {
+            currentMovies = FALLBACK_TABS.disney;
+            renderMovies(currentMovies);
+            renderSidebarDownloads();
+            return;
+        }
+        
+        // For trending, toprated, latest - use YTS
+        let params = "";
+        if (category === "trending") params = "?sort_by=download_count&order_by=desc&limit=30";
+        else if (category === "toprated") params = "?sort_by=rating&order_by=desc&limit=30";
+        else if (category === "latest") params = "?sort_by=date_added&order_by=desc&limit=30";
+        else params = "?limit=24";
+        
+        try {
+            const res = await fetch(`${YTS_API}${params}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            if (data.status === "ok" && data.data?.movies) {
+                currentMovies = data.data.movies.map(m => ({
+                    id: m.id, title: m.title, year: m.year, rating: m.rating,
+                    genres: m.genres, summary: m.summary, large_cover_image: m.large_cover_image,
+                    torrents: m.torrents
+                }));
+                renderMovies(currentMovies);
+            } else throw new Error();
+        } catch (err) {
+            console.warn("YTS failed, using fallback for this tab");
+            // fallback for main tabs
+            const genericFallback = [
+                { id: 9991, title: "Inception", year: 2010, rating: 8.8, genres: ["Action"], summary: "Dream heist.", large_cover_image: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg", torrents: [{ url: "magnet:link" }] },
+                { id: 9992, title: "The Matrix", year: 1999, rating: 8.7, genres: ["Sci-Fi"], summary: "Reality is a simulation.", large_cover_image: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg", torrents: [{ url: "magnet:link" }] }
+            ];
+            currentMovies = genericFallback;
+            renderMovies(currentMovies);
+        }
+        renderSidebarDownloads();
+    }
+
+    function searchMovies(query) {
+        if (!query.trim()) { renderMovies(currentMovies); return; }
+        const filtered = currentMovies.filter(m => m.title.toLowerCase().includes(query.toLowerCase()));
+        renderMovies(filtered);
+    }
+
+    // Tab switching with dynamic title
+    const tabButtons = document.querySelectorAll(".tab-cine");
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", async () => {
+            tabButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentTab = btn.dataset.tab;
+            let title = "";
+            if (currentTab === "trending") title = "🔥 Trending Now";
+            else if (currentTab === "toprated") title = "⭐ Top Rated of All Time";
+            else if (currentTab === "latest") title = "🆕 Latest Releases";
+            else if (currentTab === "cartoons") title = "🐱 Cartoons & Animation";
+            else if (currentTab === "pixar") title = "✨ Pixar Magic";
+            else if (currentTab === "disney") title = "🏰 Disney Classics";
+            document.getElementById("rowTitle").innerText = title;
+            await fetchMovies(currentTab);
+            document.getElementById("searchInput").value = "";
+        });
+    });
+
+    document.getElementById("searchBtn").addEventListener("click", () => searchMovies(document.getElementById("searchInput").value));
+    document.getElementById("searchInput").addEventListener("keyup", (e) => { if (e.key === "Enter") searchMovies(e.target.value); });
+
+    // sidebar toggle
+    const sidebar = document.getElementById("downloadsSidebar");
+    document.getElementById("sidebarToggleBtn").addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+    });
+
+    // modal close
+    const modal = document.getElementById("trailerModal");
+    document.getElementById("closeModalBtn").addEventListener("click", () => {
+        modal.style.display = "none";
+        document.getElementById("trailerIframe").src = "";
+    });
+    window.addEventListener("click", e => { if (e.target === modal) { modal.style.display = "none"; document.getElementById("trailerIframe").src = ""; } });
+
+    // initial load
+    fetchMovies("trending");
+    renderSidebarDownloads();
+</script>
+</body>
+</html>
